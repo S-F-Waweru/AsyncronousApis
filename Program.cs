@@ -23,7 +23,7 @@ app.MapPost("api/v1/products", async (AppDbContext context, ListingRequest listi
     await context.AddAsync(listingRequest);
     await context.SaveChangesAsync(); 
     
-     return Results.Accepted($"api/v1/productstatus/{listingRequest.Id}", listingRequest);
+     return Results.Accepted($"/api/v1/productstatus/{listingRequest.RequestId}", listingRequest);
     
 });
 
@@ -44,9 +44,9 @@ app.MapGet("api/v1/productstatus/{requestId}", (AppDbContext context, string req
 
         if (listingStatus.RequestStatus!.ToUpper() == "COMPLETE")
         {
-            listingStatus.ResourceUrl = $"api/v1/product/{Guid.NewGuid().ToString()}";
+            listingStatus.ResourceUrl = $"/api/v1/products/{listingRequest.RequestId}";
             // return Results.Ok(listingStatus);
-            return Results.Redirect("https://localhost:5001/" + listingStatus.ResourceUrl);
+            return Results.Redirect(listingStatus.ResourceUrl);
         }
         
         listingStatus.EstimatedCompletionTime = "2026-10-31:21:00:00";
